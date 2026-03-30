@@ -1,7 +1,7 @@
 #include <WiFi.h>
 
-const char* ssid = "Next_SDR100S_1_5G";  // Wifi name
-const char* password = "sdrNEXT#24"; // Wifi password
+const char* ssid = "Wifi_name";  // Wifi name
+const char* password = "Password"; // Wifi password
 
 // config ESP32 static ip 
 IPAddress local_IP(192, 168, 1, 115); // ESP32 IP
