@@ -1,0 +1,329 @@
+[
+    {
+        "id": "785ab38ccc9caa19",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e846b79bf0839a2f",
+        "type": "inject",
+        "z": "785ab38ccc9caa19",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "06b2afac78982ff7",
+                "3dbccaf58071a5c5"
+            ]
+        ]
+    },
+    {
+        "id": "06b2afac78982ff7",
+        "type": "function",
+        "z": "785ab38ccc9caa19",
+        "name": "get_apexZ3_battery",
+        "func": "let apex_battery = global.get('batteryFuel')\nmsg.payload = apex_battery\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 300,
+        "wires": [
+            [
+                "a6deb2ae273d3a2d"
+            ]
+        ]
+    },
+    {
+        "id": "a6deb2ae273d3a2d",
+        "type": "switch",
+        "z": "785ab38ccc9caa19",
+        "name": "check_apexZ3_battery",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lte",
+                "v": "30",
+                "vt": "str"
+            },
+            {
+                "t": "gte",
+                "v": "100",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 600,
+        "y": 300,
+        "wires": [
+            [
+                "6f73155e602f31ab"
+            ],
+            [
+                "53bba70b3807d605"
+            ]
+        ]
+    },
+    {
+        "id": "6f73155e602f31ab",
+        "type": "function",
+        "z": "785ab38ccc9caa19",
+        "name": "get_robot_battery",
+        "func": "let robot_battery = global.get('Battery_SOC_(%)')\nmsg.payload = robot_battery\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 220,
+        "wires": [
+            [
+                "54eab4f9b8c3bbf3"
+            ]
+        ]
+    },
+    {
+        "id": "54eab4f9b8c3bbf3",
+        "type": "switch",
+        "z": "785ab38ccc9caa19",
+        "name": "check_robot_battery",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gte",
+                "v": "30",
+                "vt": "str"
+            },
+            {
+                "t": "lte",
+                "v": "30",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 600,
+        "y": 220,
+        "wires": [
+            [
+                "8ae4abe3e5c0a28e"
+            ],
+            [
+                "53bba70b3807d605"
+            ]
+        ]
+    },
+    {
+        "id": "3dbccaf58071a5c5",
+        "type": "function",
+        "z": "785ab38ccc9caa19",
+        "name": "get_is_robot_charge",
+        "func": "let is_robot_is_charging = global.get('batteryFuel');\nmsg.payload = is_robot_is_charging;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 160,
+        "wires": [
+            [
+                "8ae4abe3e5c0a28e"
+            ]
+        ]
+    },
+    {
+        "id": "830947629d8f08c2",
+        "type": "tcp out",
+        "z": "785ab38ccc9caa19",
+        "name": "sent_command_to_esp32",
+        "host": "",
+        "port": "8000",
+        "beserver": "server",
+        "base64": false,
+        "end": false,
+        "tls": "",
+        "x": 1430,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "8ae4abe3e5c0a28e",
+        "type": "function",
+        "z": "785ab38ccc9caa19",
+        "name": "start_charge_Apex_command",
+        "func": "msg.payload = \"command:02:1\\n\"\nflow.set('pending_command', '02:1');\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 220,
+        "wires": [
+            [
+                "9da72d12958225f5"
+            ]
+        ]
+    },
+    {
+        "id": "53bba70b3807d605",
+        "type": "function",
+        "z": "785ab38ccc9caa19",
+        "name": "stop_charge_apex_command",
+        "func": "msg.payload = \"command:02:0\\n\"\nflow.set('pending_command', '02:0');\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 300,
+        "wires": [
+            [
+                "9da72d12958225f5"
+            ]
+        ]
+    },
+    {
+        "id": "c5f092b15a24143d",
+        "type": "tcp in",
+        "z": "785ab38ccc9caa19",
+        "name": "get_esp32_response",
+        "server": "server",
+        "host": "",
+        "port": "8000",
+        "datamode": "stream",
+        "datatype": "buffer",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "",
+        "x": 140,
+        "y": 460,
+        "wires": [
+            [
+                "4c6e7b62d5c8b04c"
+            ]
+        ]
+    },
+    {
+        "id": "0abf37e4c4b2c9e0",
+        "type": "debug",
+        "z": "785ab38ccc9caa19",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "9da72d12958225f5",
+        "type": "function",
+        "z": "785ab38ccc9caa19",
+        "name": "check_connection",
+        "func": "let lastSeen = flow.get(\"esp_last_seen\");\nlet alert = '';\nlet now = Date.now();\n\nif (now - lastSeen > 15000) {\n\n    alert = \"❌ Esp32: Connection lost (Timeout > 15 s)\";\n    return [msg,alert];\n\n}\nalert = \"sent Command to ESP32\";\nreturn [msg, alert];\n",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set('pending_command', '');\nflow.set(\"command_sent_time\", Date.now())\n\nflow.set('esp_last_seen', 0);",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 260,
+        "wires": [
+            [
+                "830947629d8f08c2"
+            ],
+            [
+                "d378859eedfc3a1e"
+            ]
+        ]
+    },
+    {
+        "id": "40f5a0f83667f9e2",
+        "type": "comment",
+        "z": "785ab38ccc9caa19",
+        "name": "set flag",
+        "info": "set flag ",
+        "x": 1190,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4c6e7b62d5c8b04c",
+        "type": "function",
+        "z": "785ab38ccc9caa19",
+        "name": "check_response",
+        "func": "let data = msg.payload.toString().trim();\nlet pending = flow.get('pending_command');\n\nif (data == \"response:\"+pending) {\n    flow.set(\"esp_last_seen\", Date.now());\n    return data;\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 460,
+        "wires": [
+            [
+                "0abf37e4c4b2c9e0"
+            ]
+        ]
+    },
+    {
+        "id": "d378859eedfc3a1e",
+        "type": "debug",
+        "z": "785ab38ccc9caa19",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 300,
+        "wires": []
+    }
+]

@@ -1,0 +1,38 @@
+##connect WIFI
+sudo nmcli device wifi connect "ชื่อWiFi" password "รหัสผ่านWiFi"
+
+##connect old WIFI
+sudo nmcli connection up "ชื่อWiFi"
+
+##show list WIFI
+nmcli connection show
+
+##check WIFI STATUS
+nmcli device status
+
+## chekc IP ADRESS
+ip a show wlan0
+
+
+##keenon http: handle
+GET value 
+http://localhost:8000/check-robot-connection
+
+##add point
+curl -X POST http://localhost:8000/add-points \
+     -H "Content-Type: application/json" \
+     -d '{"points": ["6002-IS-1K017-default", "6002-IS-1K018-default"]}'
+
+##start running 
+curl -X POST http://localhost:8000/start-transportation
+
+## start dust
+curl -X POST http://localhost:8000/start-dust \
+     -H "Content-Type: application/json" \
+     -d '{"required_send_database": true}'
+
+## DELETE point
+curl -X DELETE http://localhost:8000/del-points
+
+## get other
+curl http://localhost:8000/get-points
